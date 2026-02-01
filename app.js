@@ -1,11 +1,9 @@
 // 密碼
 const PASSWORD = '8899';
 
-// GitHub 設定 - 用於雲端儲存
-const GITHUB_OWNER = 'kisslkk558899-cyber';
-const GITHUB_REPO = 'expense-tracker';
-const GITHUB_FILE = 'data.json';
-const GITHUB_TOKEN = ''; // 需要用戶提供
+// JSONBin 設定 - 雲端儲存
+const JSONBIN_BIN_ID = '697fe1f8d0ea881f4099998a';
+const JSONBIN_API_KEY = '$2a$10$L/JCi3focRp9YLHAMZwKpOYB1cMJI7xOskG9YmLZoEbDYqXXh9W12';
 
 // 當前編輯的記錄
 let currentEditRecord = null;
@@ -180,9 +178,9 @@ function closeModal() {
     document.getElementById('editModal').classList.remove('active');
 }
 
-// ========== 雲端儲存功能（使用 GitHub） ==========
+// ========== 雲端儲存功能（使用 JSONBin） ==========
 
-// 儲存到雲端（GitHub）
+// 儲存到雲端（JSONBin）
 async function saveToCloud() {
     const saveBtn = document.getElementById('saveCloudBtn');
     saveBtn.textContent = '儲存中...';
@@ -190,43 +188,23 @@ async function saveToCloud() {
     showSyncStatus('正在儲存到雲端...', 'loading');
     
     try {
-        // 先獲取當前文件的 SHA
-        const getResponse = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE}`, {
-            headers: {
-                'Accept': 'application/vnd.github.v3+json'
-            }
-        });
-        
-        let sha = '';
-        if (getResponse.ok) {
-            const fileData = await getResponse.json();
-            sha = fileData.sha;
-        }
-        
-        // 更新文件
-        const content = btoa(unescape(encodeURIComponent(JSON.stringify(expenseData, null, 2))));
-        
-        const updateResponse = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE}`, {
+        const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
             method: 'PUT',
             headers: {
-                'Accept': 'application/vnd.github.v3+json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-Master-Key': JSONBIN_API_KEY
             },
-            body: JSON.stringify({
-                message: '更新帳目資料 ' + new Date().toLocaleString('zh-TW'),
-                content: content,
-                sha: sha
-            })
+            body: JSON.stringify(expenseData)
         });
         
-        if (updateResponse.ok || updateResponse.status === 201) {
+        if (response.ok) {
             showSyncStatus('✅ 已儲存到雲端！任何人打開網頁都會看到最新資料。', 'success');
         } else {
             throw new Error('儲存失敗');
         }
     } catch (error) {
         console.error('儲存失敗:', error);
-        // 如果 GitHub API 失敗，使用備用方案：localStorage
+        // 如果雲端失敗，使用備用方案：localStorage
         localStorage.setItem('expenseData', JSON.stringify(expenseData));
         showSyncStatus('⚠️ 雲端儲存失敗，已存到本地。請稍後再試。', 'error');
     }
@@ -235,21 +213,20 @@ async function saveToCloud() {
     saveBtn.disabled = false;
 }
 
-// 從雲端載入（GitHub）
+// 從雲端載入（JSONBin）
 async function loadFromCloud() {
     showSyncStatus('正在載入資料...', 'loading');
     
     try {
-        const response = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE}`, {
+        const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
             headers: {
-                'Accept': 'application/vnd.github.v3+json'
+                'X-Master-Key': JSONBIN_API_KEY
             }
         });
         
         if (response.ok) {
-            const fileData = await response.json();
-            const content = decodeURIComponent(escape(atob(fileData.content)));
-            expenseData = JSON.parse(content);
+            const data = await response.json();
+            expenseData = data.record;
             showSyncStatus('✅ 已從雲端載入最新資料', 'success');
         } else {
             throw new Error('載入失敗');
