@@ -1,6 +1,12 @@
 // 密碼
 const PASSWORD = '8899';
 
+// GitHub 設定 - 用於雲端儲存
+const GITHUB_OWNER = 'kisslkk558899-cyber';
+const GITHUB_REPO = 'expense-tracker';
+const GITHUB_FILE = 'data.json';
+const GITHUB_TOKEN = ''; // 需要用戶提供
+
 // 當前編輯的記錄
 let currentEditRecord = null;
 let currentEditMonth = null;
@@ -21,6 +27,20 @@ let expenseData = {
     '10': []
 };
 
+// 顯示同步狀態
+function showSyncStatus(message, type) {
+    const statusDiv = document.getElementById('syncStatus');
+    statusDiv.textContent = message;
+    statusDiv.className = 'sync-status ' + type;
+    statusDiv.classList.remove('hidden');
+    
+    if (type === 'success') {
+        setTimeout(() => {
+            statusDiv.classList.add('hidden');
+        }, 3000);
+    }
+}
+
 // 登入功能
 function login(event) {
     event.preventDefault();
@@ -30,8 +50,7 @@ function login(event) {
     if (password === PASSWORD) {
         document.getElementById('loginContainer').classList.add('hidden');
         document.getElementById('mainContainer').classList.remove('hidden');
-        loadData();
-        renderAllMonths();
+        loadFromCloud();
     } else {
         errorDiv.textContent = '密碼錯誤，請重試';
         errorDiv.classList.remove('hidden');
@@ -40,11 +59,8 @@ function login(event) {
 
 // 切換月份
 function switchMonth(month) {
-    // 更新 tab 樣式
     document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
     event.target.classList.add('active');
-    
-    // 顯示對應月份
     document.querySelectorAll('.month-section').forEach(section => section.classList.remove('active'));
     document.getElementById(`month-${month}`).classList.add('active');
 }
@@ -79,7 +95,7 @@ function renderMonth(month) {
                 <div class="record-content">
                     ${record.deposit ? `<div><strong>入款：</strong>${record.deposit}</div>` : ''}
                     <div><strong>開銷明細：</strong></div>
-                    ${record.expenses.length > 0 ? record.expenses.map(exp => `<div class="expense-item">${exp}</div>`).join('') : '<div class="expense-item">無</div>'}
+                    ${record.expenses && record.expenses.length > 0 ? record.expenses.map(exp => `<div class="expense-item">${exp}</div>`).join('') : '<div class="expense-item">無</div>'}
                     ${record.total ? `<div><strong>當日開銷總計：</strong>${record.total}</div>` : ''}
                     ${record.balance ? `<div class="balance">餘額：${record.balance}</div>` : ''}
                 </div>
@@ -115,47 +131,48 @@ function editRecord(month, index) {
     document.getElementById('modalTitle').textContent = '編輯記錄';
     document.getElementById('editDate').value = record.date;
     document.getElementById('editDeposit').value = record.deposit || '';
-    document.getElementById('editExpenses').value = record.expenses.join('\n');
+    document.getElementById('editExpenses').value = (record.expenses || []).join('\n');
     document.getElementById('editTotal').value = record.total || '';
     document.getElementById('editBalance').value = record.balance || '';
     
     document.getElementById('editModal').classList.add('active');
 }
 
-// 刪除記錄
-function deleteRecord(month, index) {
-    if (confirm('確定要刪除這筆記錄嗎？')) {
+// 刪除記錄 - 同時刪除雲端
+async function deleteRecord(month, index) {
+    if (confirm('確定要刪除這筆記錄嗎？\n刪除後會同步到雲端，所有人都會看到刪除後的結果。')) {
         expenseData[month].splice(index, 1);
-        saveData();
         renderMonth(month);
+        
+        // 自動同步到雲端
+        await saveToCloud();
     }
 }
 
 // 保存記錄
-function saveRecord(event) {
+async function saveRecord(event) {
     event.preventDefault();
     
     const record = {
         date: document.getElementById('editDate').value,
-        deposit: document.getElementById('editDeposit').value.trim(),
+        deposit: document.getElementById('editDeposit').value.trim() || null,
         expenses: document.getElementById('editExpenses').value.trim().split('\n').filter(e => e.trim()),
-        total: document.getElementById('editTotal').value.trim(),
-        balance: document.getElementById('editBalance').value.trim()
+        total: document.getElementById('editTotal').value.trim() || null,
+        balance: document.getElementById('editBalance').value.trim() || null
     };
     
     if (currentEditRecord !== null) {
-        // 編輯現有記錄
         expenseData[currentEditMonth][currentEditRecord] = record;
     } else {
-        // 新增記錄
         expenseData[currentEditMonth].push(record);
-        // 按日期排序
         expenseData[currentEditMonth].sort((a, b) => a.date.localeCompare(b.date));
     }
     
-    saveData();
     renderMonth(currentEditMonth);
     closeModal();
+    
+    // 自動同步到雲端
+    await saveToCloud();
 }
 
 // 關閉 Modal
@@ -163,27 +180,93 @@ function closeModal() {
     document.getElementById('editModal').classList.remove('active');
 }
 
-// 保存數據到 localStorage
-function saveData() {
-    localStorage.setItem('expenseData', JSON.stringify(expenseData));
+// ========== 雲端儲存功能（使用 GitHub） ==========
+
+// 儲存到雲端（GitHub）
+async function saveToCloud() {
+    const saveBtn = document.getElementById('saveCloudBtn');
+    saveBtn.textContent = '儲存中...';
+    saveBtn.disabled = true;
+    showSyncStatus('正在儲存到雲端...', 'loading');
+    
+    try {
+        // 先獲取當前文件的 SHA
+        const getResponse = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE}`, {
+            headers: {
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
+        
+        let sha = '';
+        if (getResponse.ok) {
+            const fileData = await getResponse.json();
+            sha = fileData.sha;
+        }
+        
+        // 更新文件
+        const content = btoa(unescape(encodeURIComponent(JSON.stringify(expenseData, null, 2))));
+        
+        const updateResponse = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE}`, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/vnd.github.v3+json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: '更新帳目資料 ' + new Date().toLocaleString('zh-TW'),
+                content: content,
+                sha: sha
+            })
+        });
+        
+        if (updateResponse.ok || updateResponse.status === 201) {
+            showSyncStatus('✅ 已儲存到雲端！任何人打開網頁都會看到最新資料。', 'success');
+        } else {
+            throw new Error('儲存失敗');
+        }
+    } catch (error) {
+        console.error('儲存失敗:', error);
+        // 如果 GitHub API 失敗，使用備用方案：localStorage
+        localStorage.setItem('expenseData', JSON.stringify(expenseData));
+        showSyncStatus('⚠️ 雲端儲存失敗，已存到本地。請稍後再試。', 'error');
+    }
+    
+    saveBtn.textContent = '☁️ 儲存到雲端';
+    saveBtn.disabled = false;
 }
 
-// 從 localStorage 載入數據
-function loadData() {
-    const saved = localStorage.getItem('expenseData');
-    if (saved) {
-        expenseData = JSON.parse(saved);
-    } else {
-        // 首次載入，從 data.json 載入初始數據
-        fetch('data.json')
-            .then(response => response.json())
-            .then(data => {
-                expenseData = data;
-                saveData();
-                renderAllMonths();
-            })
-            .catch(error => console.error('載入數據失敗:', error));
+// 從雲端載入（GitHub）
+async function loadFromCloud() {
+    showSyncStatus('正在載入資料...', 'loading');
+    
+    try {
+        const response = await fetch(`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${GITHUB_FILE}`, {
+            headers: {
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
+        
+        if (response.ok) {
+            const fileData = await response.json();
+            const content = decodeURIComponent(escape(atob(fileData.content)));
+            expenseData = JSON.parse(content);
+            showSyncStatus('✅ 已從雲端載入最新資料', 'success');
+        } else {
+            throw new Error('載入失敗');
+        }
+    } catch (error) {
+        console.error('載入失敗:', error);
+        // 嘗試從 localStorage 載入
+        const localData = localStorage.getItem('expenseData');
+        if (localData) {
+            expenseData = JSON.parse(localData);
+            showSyncStatus('⚠️ 使用本地資料', 'error');
+        } else {
+            showSyncStatus('⚠️ 無法載入資料，使用空白資料', 'error');
+        }
     }
+    
+    renderAllMonths();
 }
 
 // 匯出數據功能
@@ -194,7 +277,6 @@ function exportData() {
     const link = document.createElement('a');
     link.href = url;
     
-    // 使用當前日期作為檔名
     const now = new Date();
     const dateStr = now.toISOString().split('T')[0];
     link.download = `公司帳目_${dateStr}.json`;

@@ -41,11 +41,18 @@
             text-align: center;
         }
         
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
         .tabs {
             display: flex;
             gap: 10px;
             margin-bottom: 30px;
             border-bottom: 2px solid #eee;
+            flex-wrap: wrap;
         }
         
         .tab {
@@ -134,6 +141,15 @@
         
         .btn-success:hover {
             background: #218838;
+        }
+        
+        .btn-cloud {
+            background: #17a2b8;
+            color: white;
+        }
+        
+        .btn-cloud:hover {
+            background: #138496;
         }
         
         .record-content {
@@ -258,6 +274,29 @@
         .hidden {
             display: none;
         }
+        
+        .sync-status {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .sync-status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .sync-status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .sync-status.loading {
+            background: #fff3cd;
+            color: #856404;
+        }
     </style>
 </head>
 <body>
@@ -273,10 +312,15 @@
 
     <!-- 主要內容 -->
     <div id="mainContainer" class="container hidden">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
             <h1 style="margin: 0;">📊 公司開銷帳表</h1>
-            <button class="btn btn-success" onclick="exportData()" style="padding: 10px 20px;">💾 匯出數據</button>
+            <div class="header-buttons">
+                <button id="saveCloudBtn" class="btn btn-cloud" onclick="saveToCloud()" style="padding: 10px 20px;">☁️ 儲存到雲端</button>
+                <button class="btn btn-success" onclick="exportData()" style="padding: 10px 20px;">💾 匯出數據</button>
+            </div>
         </div>
+        
+        <div id="syncStatus" class="sync-status hidden"></div>
         
         <div class="tabs">
             <button class="tab active" onclick="switchMonth('11')">11月</button>
