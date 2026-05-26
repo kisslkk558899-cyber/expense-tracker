@@ -1539,6 +1539,13 @@
       ],
       "total": "8011",
       "balance": "ABA:2265  UDTD:389"
+    },
+    {
+      "date": "2026-05-26",
+      "deposit": "入交收款USTD:16203",
+      "expenses": [],
+      "total": null,
+      "balance": null
     }
   ],
   "06": [],
