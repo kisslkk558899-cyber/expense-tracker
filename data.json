@@ -1588,6 +1588,13 @@
   ],
   "06": [
     {
+      "date": "2026-05-31",
+      "deposit": "6月份尚且借支人員",
+      "expenses": [],
+      "total": null,
+      "balance": null
+    },
+    {
       "date": "2026-06-02",
       "deposit": "ABA入款:5000(二哥轉入)\n                    5月份餘額ABA:2404+5000=7407UDTD:863",
       "expenses": [
