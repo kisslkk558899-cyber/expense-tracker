@@ -1731,6 +1731,16 @@
       ],
       "total": "2058",
       "balance": "ABA:13     UDTD:179"
+    },
+    {
+      "date": "2026-06-21",
+      "deposit": null,
+      "expenses": [
+        "美國組:加油35+換機油70",
+        "越南大頭組:檢查罰款300+清潔費150"
+      ],
+      "total": null,
+      "balance": "ABA:13     UDTD:179"
     }
   ],
   "07": [],
