@@ -1741,6 +1741,16 @@
       ],
       "total": "2595",
       "balance": "ABA:458     UDTD:139"
+    },
+    {
+      "date": "2026-06-22",
+      "deposit": null,
+      "expenses": [
+        "美國組:(狄蜜特周邊商46u)",
+        "越南大頭組:(簽證125x4=500)"
+      ],
+      "total": null,
+      "balance": "ABA:8     UDTD:43"
     }
   ],
   "07": [],
