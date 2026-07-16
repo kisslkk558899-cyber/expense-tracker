@@ -1957,6 +1957,13 @@
       ],
       "total": "10584",
       "balance": "ABA:141   UDTD:42710  盧比2016000"
+    },
+    {
+      "date": "2026-07-16",
+      "deposit": null,
+      "expenses": [],
+      "total": null,
+      "balance": "盧比:2016000   UDTD:42710  ABA:141"
     }
   ],
   "08": [],
