@@ -2003,6 +2003,13 @@
       ],
       "total": "盧比:8671000   UDTD:2250  ABA:34945",
       "balance": "盧比:30000   UDTD:58  ABA:12062"
+    },
+    {
+      "date": "2026-07-25",
+      "deposit": "ABA入款5000(二哥）\nUSTD入款20000(大哥)+1123(凱莉)=21123",
+      "expenses": [],
+      "total": null,
+      "balance": null
     }
   ],
   "08": [],
