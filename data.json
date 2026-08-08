@@ -2061,7 +2061,9 @@
     {
       "date": "2026-08-02",
       "deposit": null,
-      "expenses": [],
+      "expenses": [
+        "上月結餘"
+      ],
       "total": null,
       "balance": "盧比:4000 UDTD:181 ABA:20418"
     },
