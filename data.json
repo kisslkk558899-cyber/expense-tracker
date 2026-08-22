@@ -2260,7 +2260,9 @@
     {
       "date": "2026-08-22",
       "deposit": "入交收款USTD:57154",
-      "expenses": [],
+      "expenses": [
+        "大哥帳:奧利奧借56000"
+      ],
       "total": null,
       "balance": "盧比:9600 UDTD:90 ABA:77"
     }
