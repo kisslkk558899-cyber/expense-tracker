@@ -2256,6 +2256,13 @@
       ],
       "total": "盧比:146000 UDTD:1250 ABA:77",
       "balance": "盧比:9600 UDTD:90 ABA:77"
+    },
+    {
+      "date": "2026-08-22",
+      "deposit": "入交收款USTD:57154",
+      "expenses": [],
+      "total": null,
+      "balance": "盧比:9600 UDTD:90 ABA:77"
     }
   ],
   "09": []
