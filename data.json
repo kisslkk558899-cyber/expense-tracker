@@ -2343,6 +2343,13 @@
   ],
   "09": [
     {
+      "date": "2026-09-01",
+      "deposit": null,
+      "expenses": [],
+      "total": null,
+      "balance": "盧比:14000 UDTD:25 ABA:77"
+    },
+    {
       "date": "2026-09-02",
       "deposit": "入帳USTD:20000(大哥)\n\nUSTD:11000換匯ABA=11000\nUSTD:3214換匯盧比=900000",
       "expenses": [
