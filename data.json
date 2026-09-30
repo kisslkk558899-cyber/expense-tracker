@@ -2647,6 +2647,13 @@
       ],
       "total": "USTD:4002 ABA:100",
       "balance": "盧比:326160 UDTD:29 ABA:26"
+    },
+    {
+      "date": "2026-09-29",
+      "deposit": null,
+      "expenses": [],
+      "total": null,
+      "balance": "盧比:326160 UDTD:29 ABA:26"
     }
   ]
 }
