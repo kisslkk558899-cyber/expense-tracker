@@ -1,5 +1,13 @@
 {
-  "10": [],
+  "10": [
+    {
+      "date": "2026-10-01",
+      "deposit": null,
+      "expenses": [],
+      "total": null,
+      "balance": "盧比:34660 UDTD:29 ABA:26"
+    }
+  ],
   "11": [
     {
       "date": "2025-11-01",
