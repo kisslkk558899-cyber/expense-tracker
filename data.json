@@ -83,6 +83,16 @@
       ],
       "total": "盧比：490000 USTD:2224",
       "balance": "盧比:72660 UDTD:10 ABA:26"
+    },
+    {
+      "date": "2026-10-08",
+      "deposit": "10/8入款USTD:2500(二哥）\nUSTD2500換匯ABA:2480",
+      "expenses": [
+        "越南組ABA：預發薪水1000",
+        "大哥帳ABA:轉帳二哥1480"
+      ],
+      "total": "ABA:2480",
+      "balance": null
     }
   ],
   "11": [
