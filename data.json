@@ -189,9 +189,11 @@
     {
       "date": "2026-10-18",
       "deposit": "入款USTD:1380(凱莉）",
-      "expenses": [],
-      "total": null,
-      "balance": "盧比:301660 UDTD:1441 ABA:26"
+      "expenses": [
+        "美國組USTD：小黑工資500+周邊商狄蜜特442=942"
+      ],
+      "total": "USTD:942",
+      "balance": "盧比:301660 UDTD:499 ABA:26"
     }
   ],
   "11": [
