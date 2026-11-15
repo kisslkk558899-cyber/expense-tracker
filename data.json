@@ -291,23 +291,6 @@
   ],
   "11": [
     {
-      "date": "2025-11-24",
-      "deposit": null,
-      "balance": "ABA餘額3815       USTD餘額11488",
-      "expenses": [],
-      "total": null
-    },
-    {
-      "date": "2025-11-25",
-      "deposit": null,
-      "balance": "ABA餘額2863       USTD餘額11488",
-      "expenses": [
-        "日本組：買菜250+拜拜89=339",
-        "阿寶組：買菜250+加油59+換鎖65+拜拜89+sim卡跟儲值150=613"
-      ],
-      "total": "952"
-    },
-    {
       "date": "2025-11-26",
       "deposit": null,
       "balance": "ABA餘額2679       USTD餘額11488",
