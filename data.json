@@ -291,23 +291,6 @@
   ],
   "11": [
     {
-      "date": "2025-11-08",
-      "deposit": null,
-      "balance": "ABA餘額450       USTD餘額44450",
-      "expenses": [
-        "財神組：哥晚飯65+開銷78+(系統1802u)=1945",
-        "日本組：（系統487u)+(翻譯機2台380u)=867"
-      ],
-      "total": "2812"
-    },
-    {
-      "date": "2025-11-09",
-      "deposit": null,
-      "balance": "ABA餘額450       USTD餘額44450",
-      "expenses": [],
-      "total": "0"
-    },
-    {
       "date": "2025-11-10",
       "deposit": "(U換ABA20000)",
       "balance": "ABA餘額20012       USTD餘額24344",
