@@ -291,23 +291,6 @@
   ],
   "11": [
     {
-      "date": "2025-11-16",
-      "deposit": null,
-      "balance": "ABA餘額7036       USTD餘額22956",
-      "expenses": [],
-      "total": "0"
-    },
-    {
-      "date": "2025-11-17",
-      "deposit": "(U換ABA10000)",
-      "balance": "ABA餘額6506       USTD餘額12956",
-      "expenses": [
-        "財神組：換匯手續費30",
-        "大哥帳：財神薪水含路費10500"
-      ],
-      "total": "10530"
-    },
-    {
       "date": "2025-11-18",
       "deposit": null,
       "balance": "ABA餘額6366       USTD餘額12236",
